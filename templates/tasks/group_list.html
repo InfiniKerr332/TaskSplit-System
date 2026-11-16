@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}My groups - TaskSplit{% endblock %}
+{% block content %}
+    <div class="page-heading">
+        <div>
+            <h1>My groups</h1>
+            <p>Your projects and the people you're working with.</p>
+        </div>
+        <a class="button" href="{% url 'tasks:create_group' %}">Create a group</a>
+    </div>
+    {% if groups %}
+        <ul class="group-grid">
+            {% for group in groups %}
+                <li class="panel group-card">
+                    <span class="role-label">{% if group.leader_id == user.pk %}Leader{% else %}Member{% endif %}</span>
+                    <h2><a href="{% url 'tasks:group_detail' group.pk %}">{{ group.name }}</a></h2>
+                    {% if group.description %}<p class="group-description">{{ group.description|truncatechars:150 }}</p>{% endif %}
+                    <p class="meta">Led by {{ group.leader.username }}</p>
+                    <a class="text-link" href="{% url 'tasks:group_detail' group.pk %}">Open group</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <section class="panel empty-state">
+            <h2>Start your first project</h2>
+            <p>Create a group for your team, or join with a code from your group leader.</p>
+            <div class="actions">
+                <a class="button" href="{% url 'tasks:create_group' %}">Create a group</a>
+                <a class="button button-secondary" href="{% url 'tasks:join_group' %}">Join a group</a>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

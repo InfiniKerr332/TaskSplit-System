@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ title }} - TaskSplit{% endblock %}
+{% block content %}
+    <section class="form-page">
+        <div class="form-heading">
+            <img src="{% static 'tasks/logo.png' %}" width="64" height="64" alt="TaskSplit logo">
+            <h1>{{ title }}</h1>
+        </div>
+        <form class="panel form-panel" method="post">
+            {% csrf_token %}
+            {% include 'tasks/form_fields.html' %}
+            <button class="button button-full" type="submit">{{ button }}</button>
+        </form>
+        {% if not user.is_authenticated %}
+            <p class="form-footer">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+        {% else %}
+            <p class="form-footer"><a href="{% url 'tasks:group_list' %}">Back to my groups</a></p>
+        {% endif %}
+    </section>
+{% endblock %}

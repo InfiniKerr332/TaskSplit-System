@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Log in - TaskSplit{% endblock %}
+{% block content %}
+    <section class="form-page">
+        <div class="form-heading">
+            <img src="{% static 'tasks/logo.png' %}" width="64" height="64" alt="TaskSplit logo">
+            <h1>Your workspace, organized.</h1>
+            <p>Log in to your TaskSplit account.</p>
+        </div>
+        <form class="panel form-panel" method="post">
+            {% csrf_token %}
+            {% include 'tasks/form_fields.html' %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+            <button class="button button-full" type="submit">Log in</button>
+        </form>
+        <p class="form-footer">New to TaskSplit? <a href="{% url 'tasks:register' %}">Create an account</a></p>
+    </section>
+{% endblock %}

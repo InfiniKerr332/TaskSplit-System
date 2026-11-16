@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <section class="welcome">
+        <img class="welcome-logo" src="{% static 'tasks/logo.png' %}" width="88" height="88" alt="TaskSplit logo">
+        {% if user.is_authenticated %}
+            <h1>Welcome, {{ user.username }}.</h1>
+            <p>Keep your team's tasks and deadlines in one place.</p>
+            <a class="button" href="{% url 'tasks:group_list' %}">Open my groups</a>
+        {% else %}
+            <h1>Your group's<br>workspace.</h1>
+            <p>Bring your team together.<br>Keep track of tasks, deadlines, and progress.</p>
+            <a class="button" href="{% url 'tasks:register' %}">Create an account</a>
+            <p class="welcome-login">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+        {% endif %}
+    </section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.name }} - TaskSplit{% endblock %}
+{% block content %}
+    <a class="back-link" href="{% url 'tasks:group_list' %}">Back to my groups</a>
+    <div class="page-heading">
+        <div>
+            <h1>{{ project.name }}</h1>
+            {% if project.description %}<p>{{ project.description|linebreaksbr }}</p>{% endif %}
+        </div>
+        {% if user.is_staff %}
+            <a class="button" href="{% url 'admin:tasks_task_add' %}">Add a task in Django admin</a>
+        {% endif %}
+    </div>
+
+    <div class="project-layout">
+        <aside class="project-sidebar" aria-label="Group information">
+            <section class="panel">
+                <h2>Group code</h2>
+                <p class="meta">Share this code to invite your teammates.</p>
+                <code class="group-code">{{ project.join_code }}</code>
+            </section>
+            <section class="panel">
+                <h2>Members <span class="count">{{ members|length }}</span></h2>
+                <ul class="member-list">
+                    {% for member in members %}
+                        <li>
+                            <span class="avatar" aria-hidden="true">{{ member.user.username|slice:':1'|upper }}</span>
+                            <div>
+                                <span class="member-name">{{ member.user.username }}</span>
+                                <span class="meta">{% if member.user_id == project.leader_id %}Leader{% else %}Member{% endif %}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </aside>
+
+        <section class="task-section" aria-labelledby="tasks-heading">
+            <div class="section-heading">
+                <h2 id="tasks-heading">Tasks <span class="count">{{ tasks|length }}</span></h2>
+                <p class="meta">Philippine time</p>
+            </div>
+            <ul class="task-list">
+                {% for task in tasks %}
+                    <li class="panel task-card">
+                        <div class="task-heading">
+                            <h3>{{ task.title }}</h3>
+                            <span class="status status-{{ task.status }}">{{ task.get_status_display }}</span>
+                        </div>
+                        {% if task.description %}<p class="task-description">{{ task.description|linebreaksbr }}</p>{% endif %}
+                        <dl class="task-meta">
+                            <div><dt>Assigned to</dt><dd>{{ task.assigned_to.user.username|default:'Unassigned' }}</dd></div>
+                            <div><dt>Deadline</dt><dd>{{ task.deadline|date:'M j, Y, g:i A' }}</dd></div>
+                            <div><dt>Priority</dt><dd>{{ task.get_priority_display }}</dd></div>
+                        </dl>
+                    </li>
+                {% empty %}
+                    <li class="panel empty-state">
+                        <h3>No tasks yet</h3>
+                        <p>Your project administrator can add the team's first task.</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}
